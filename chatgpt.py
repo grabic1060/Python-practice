@@ -1,3 +1,4 @@
+#chatgpt가 준 코드
 import tkinter as tk
 import time
 
