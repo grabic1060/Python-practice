@@ -1,7 +1,7 @@
 import turtle as T
 import random
 T.colormode(255)
-T.shapesize(0.05,0.05,0.05)
+T.hideturtle()
 T.shape('circle')
 T.bgcolor('black')
 T.color('yellow')
