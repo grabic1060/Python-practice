@@ -5,6 +5,7 @@ import os
 app = Tk()
 app.title("메모장")
 app.geometry("600x400")
+app.resizable(True,True)
 
 def save():
     global ROOT_FILE_DIR
@@ -42,14 +43,30 @@ def save_absolute():
 def clear():
     text.delete("1.0",END)
 
+def memo_info():
+    info=Tk()
+    info.title("메모장 정보")
+    info.geometry("200x130")
+    label_info = info.label(info, text="파이썬 메모장 테스트", font=("Arial", 18))
+    label_info.place()
+    info.mainloop()
+
+def os_info():
+    pass
+
 menu = Menu(app)
-file = Menu(menu, tearoff=10)
+file = Menu(menu, tearoff=0)
 file.add_command(label="저장", command=save, accelerator="Command+S")
 file.add_command(label="다른 이름으로 저장", command=save_absolute,
                  accelerator="Command+Shift+S")
 file.add_command(label="불러오기", command=load, accelerator="Command+O")
-file.add_command(label="모두삭제", command=clear, accelerator="Command+X")
+file.add_command(label="모두삭제", command=clear, accelerator="Command+D")
 menu.add_cascade(label="파일", menu=file)
+
+info = Menu(menu, tearoff=0)
+info.add_command(label="메모장 정보", command=memo_info)
+info.add_command(label="OS 정보", command=os_info)
+menu.add_cascade(label="정보", menu=info)
 
 text = Text(app, font="Arial 22")
 
