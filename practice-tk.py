@@ -1,52 +1,86 @@
-import turtle as t, random
+from tkinter import *
+from tkinter import filedialog
+import os
+app = Tk()
+app.title("메모장")
+app.geometry('500x400')
 
-def turn_right():
-    t.setheading(0)
+ROOT_FILE_DIR = ""
+FONT_SIZE = 14
+FONT = "Arial {}"
+# 함수 선언부
 
-def turn_up():
-    t.setheading(90)
 
-def turn_left():
-    t.setheading(180)
+def save():
+    global ROOT_FILE_DIR
+    if ROOT_FILE_DIR != "":
+        with open(ROOT_FILE_DIR, "w", encoding="utf-8") as w:
+            f = text.get("1.0", END).rstrip()
+            w.write(f)
+    else:
+        save_absolute()
 
-def turn_down():
-    t.setheading(270)
 
-def play():
-    t.forward(10)
-    te.setheading(te.towards(t.pos()))
-    te.forward(10)
-    if t.distance(ts)<12:
-        ts.goto(random.randint(-230, 230), random.randint(-230, 230))
-    if t.distance(te)<12:
-        Playing=False
-        score=0
-    if Playing:
-        t.ontimer(play,100)
+def save_absolute():
+    global ROOT_FILE_DIR
+    rootdir = os.path.abspath(os.path.dirname(__file__))
+    filename = filedialog.asksaveasfilename(
+        title="save file",
+        initialdir=rootdir, filetypes=(("text file", "*.txt"),))
+    if not filename.endswith(".txt"):
+        filename += ".txt"
+    ROOT_FILE_DIR = filename
+    save()
 
-t.shape("turtle")
-t.speed(0)
-t.color('black')
-t.penup()
 
-te=t.Turtle()
-te.shape('turtle')
-te.color('red')
-te.speed(0)
-te.penup()
-te.goto(0,200)
+def load():
+    global ROOT_FILE_DIR
+    rootdir = os.path.abspath(os.path.dirname(__file__)).replace("\\", "/")
+    filename = filedialog.askopenfilename(
+        initialdir=rootdir, title="open file", filetypes=(("text file", "*.txt"), ))
+    with open(filename, "r", encoding="utf-8") as r:
+        f = r.read()
+        text.delete("1.0", END)
+        text.insert("1.0", f)
+    ROOT_FILE_DIR = filename
 
-ts=t.Turtle()
-ts.shape('circle')
-ts.color('orange')
-ts.speed(0)
-ts.penup()
-ts.goto(0,-200)
 
-t.onkeypress(turn_right, " Right ")
-t.onkeypress(turn_up, "Up")
-t.onkeypress(turn_left, "Left")
-t.onkeypress(turn_down, "Down")
-t.listen()
+def clear():
+    text.delete("1.0", END)
 
-t.mainloop()
+
+def font_plus():
+    global FONT_SIZE
+    FONT_SIZE = FONT_SIZE+5
+    text.configure(font=FONT.format(FONT_SIZE))
+
+
+def font_minus():
+    global FONT_SIZE
+    FONT_SIZE = FONT_SIZE-5
+    if FONT_SIZE <= 0:
+        FONT_SIZE = 5
+    text.configure(font=FONT.format(FONT_SIZE))
+
+
+menu = Menu(app)
+file = Menu(menu, tearoff=0)
+file.add_command(label="저장", command=save, accelerator="Command+S")
+file.add_command(label="다른 이름으로 저장", command=save_absolute,
+                 accelerator="Command+Shift+S")
+file.add_command(label="불러오기", command=load, accelerator="Command+O")
+file.add_command(label="모두삭제", command=clear, accelerator="Command+X")
+menu.add_cascade(label="파일", menu=file)
+
+setting = Menu(menu, tearoff=0)
+setting.add_command(label="글자 키우기", command=font_plus,
+                    accelerator="Command++")
+setting.add_command(label="글자 줄이기", command=font_minus,
+                    accelerator="Command+-")
+menu.add_cascade(label="설정", menu=setting)
+
+text = Text(app, font=FONT.format(FONT_SIZE))
+text.pack(expand=True, fill=BOTH)
+
+app.config(menu=menu)
+app.mainloop()

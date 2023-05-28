@@ -1,15 +1,12 @@
-import pyautogui as auto
-import pyperclip as clip
-from time import sleep
+base = [[0 for i in range (101)] for j in range (101)]
 
+for i in range(4):
+    x1, y1, x2, y2 = map(int, input().split())
+    for j in range(x1, x2):
+        for k in range(y1, y2):
+            base[j][k] = 1
 
-def set_page(link):
-    auto.hotkey("win", "r", interval=0.1)
-    auto.write(link)
-    auto.press("return", interval=0.5)
-
-set_page("https://naver.com") # 네이버 접속
-value = auto.prompt("검색어를 입력해주세요", "검색어 입력")
-clip.copy(value)  # 값 복사
-auto.hotkey("ctrl", "v", interval=0.5)  # 붙여넣기
-auto.press("return", interval=0.1)
+result = 0
+for i in base:
+    result += sum(i)
+print(result)

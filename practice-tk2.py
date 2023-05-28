@@ -1,76 +1,37 @@
 from tkinter import *
-from tkinter import filedialog
-import os
 
+FONT = "Arial {}"
+W = 3
+H = 2
+
+# 창 기본설정
 app = Tk()
-app.title("메모장")
-app.geometry("600x400")
-app.resizable(True,True)
+app.title('계산기')
+app.minsize(width=350, height=500)  # 창의 최소크기를 350x500으로 지정
 
-def save():
-    global ROOT_FILE_DIR
-    if ROOT_FILE_DIR != "":
-        with open(ROOT_FILE_DIR, "w", encoding="utf-8") as w:
-            f = text.get("1.0", END)[:-1]
-            f = "".join(chr(ord(i) + len(f)) for i in f)
-            w.write(f)
-    else:
-        save_absolute()
+# 입력 라벨
+input_label = Label(app, text="", font=FONT.format(20),
+                    background='#FFFFFF', height=2)
+input_label.pack(fill=BOTH)
 
-def load():
-    global ROOT_FILE_DIR
-    rootdir = os.path.abspath(os.path.dirname(__file__)).replace("\\", "/")
-    filename = filedialog.askopenfilename(
-        initialdir=rootdir, title="open file", filetypes=(("text file", "*.jcd"), ))
-    with open(filename, "r", encoding="utf-8") as r:
-        f = r.read()
-        f = "".join(chr(ord(i) - len(f)) for i in f)
-        text.delete("1.0", END)
-        text.insert("1.0", f)
-    ROOT_FILE_DIR = filename
+# 결과 라벨
+result_label = Label(app, text="", font=FONT.format(
+    15), background='#FFFFFF', height=2, borderwidth=1, relief='solid')
+result_label.pack(fill=BOTH)
 
-def save_absolute():
-    global ROOT_FILE_DIR
-    rootdir = os.path.abspath(os.path.dirname(__file__))
-    filename = filedialog.asksaveasfilename(
-        title="save file",
-        initialdir=rootdir, filetypes=(("text file", "*.jcd"),))
-    if not filename.endswith(".jcd"):
-        filename += ".jcd"
-    ROOT_FILE_DIR = filename
-    save()
+# 키패드 프레임
+frame = Frame(app)
+frame.pack()
 
-def clear():
-    text.delete("1.0",END)
+# 버튼은 frame영역에서 작업한다.
+for row in range(3):       # 행
+    for col in range(3):   # 열
+        cnt = row*3+col+1  # 행이 증가할 때마다 3을 증가시켜줌
+        btn = Button(frame, text=cnt, width=W, height=H, font=FONT.format(
+            20))
+        btn.grid(row=row, column=col)
+btn0 = Button(frame, text="0", width=W, height=H,
+              font=FONT.format(20))
+btn0.grid(row=3, column=1)
 
-def memo_info():
-    info=Tk()
-    info.title("메모장 정보")
-    info.geometry("200x130")
-    label_info = info.label(info, text="파이썬 메모장 테스트", font=("Arial", 18))
-    label_info.place()
-    info.mainloop()
-
-def os_info():
-    pass
-
-menu = Menu(app)
-file = Menu(menu, tearoff=0)
-file.add_command(label="저장", command=save, accelerator="Command+S")
-file.add_command(label="다른 이름으로 저장", command=save_absolute,
-                 accelerator="Command+Shift+S")
-file.add_command(label="불러오기", command=load, accelerator="Command+O")
-file.add_command(label="모두삭제", command=clear, accelerator="Command+D")
-menu.add_cascade(label="파일", menu=file)
-
-info = Menu(menu, tearoff=0)
-info.add_command(label="메모장 정보", command=memo_info)
-info.add_command(label="OS 정보", command=os_info)
-menu.add_cascade(label="정보", menu=info)
-
-text = Text(app, font="Arial 22")
-
-text.pack(expand=True, fill=BOTH)
-
-app.config(menu=menu)
 app.mainloop()

@@ -1,19 +1,14 @@
 #chatgpt가 준 코드
-import tkinter as tk
-import time
+import sympy as sp
 
-root = tk.Tk()
-root.title("시계")
+# 변수 선언
+x = sp.Symbol('x')
 
-current_time = time.strftime("%H:%M:%S")
+# 함수 정의
+f = 4*x + 2
 
-clock_label = tk.Label(root, text=current_time, font=("Helvetica", 48))
-clock_label.pack(pady=20)
+# 함수를 x에 대해 적분
+integral = sp.integrate(f, x)
 
-def update_time():
-    current_time = time.strftime("%H:%M:%S")
-    clock_label.config(text=current_time)
-    root.after(1000, update_time)
-
-update_time()
-root.mainloop()
+# 결과 출력
+print("적분 결과:", integral)
