@@ -1,37 +1,165 @@
-from tkinter import *
+import tkinter as tk
+window = tk.Tk()
+window.title("그림판")
+window.geometry("640x400")
 
-FONT = "Arial {}"
-W = 3
-H = 2
+draw_mode = 0
+draw_color = "black"
+x1 = 0
+y1 = 0
 
-# 창 기본설정
-app = Tk()
-app.title('계산기')
-app.minsize(width=350, height=500)  # 창의 최소크기를 350x500으로 지정
 
-# 입력 라벨
-input_label = Label(app, text="", font=FONT.format(20),
-                    background='#FFFFFF', height=2)
-input_label.pack(fill=BOTH)
+def lineButton():
+   global draw_mode
+   draw_mode = 1
+   print(draw_mode)
 
-# 결과 라벨
-result_label = Label(app, text="", font=FONT.format(
-    15), background='#FFFFFF', height=2, borderwidth=1, relief='solid')
-result_label.pack(fill=BOTH)
 
-# 키패드 프레임
-frame = Frame(app)
-frame.pack()
+def rectangleButton():
+   global draw_mode
+   draw_mode = 2
+   print(draw_mode)
 
-# 버튼은 frame영역에서 작업한다.
-for row in range(3):       # 행
-    for col in range(3):   # 열
-        cnt = row*3+col+1  # 행이 증가할 때마다 3을 증가시켜줌
-        btn = Button(frame, text=cnt, width=W, height=H, font=FONT.format(
-            20))
-        btn.grid(row=row, column=col)
-btn0 = Button(frame, text="0", width=W, height=H,
-              font=FONT.format(20))
-btn0.grid(row=3, column=1)
 
-app.mainloop()
+def circleButton():
+   global draw_mode
+   draw_mode = 3
+   print(draw_mode)
+
+
+def textButton():
+   global draw_mode
+   draw_mode = 4
+   print(draw_mode)
+
+
+def blackButton():
+   global draw_color
+   draw_color = "black"
+   print(draw_color)
+
+
+def whiteButton():
+   global draw_color
+   draw_color = "white"
+   print(draw_color)
+
+
+def redButton():
+   global draw_color
+   draw_color = "red"
+   print(draw_color)
+
+
+def orangeButton():
+   global draw_color
+   draw_color = "orange"
+   print(draw_color)
+
+
+def yellowButton():
+   global draw_color
+   draw_color = "yellow"
+   print(draw_color)
+
+
+def greenButton():
+   global draw_color
+   draw_color = "green"
+   print(draw_color)
+
+
+def blueButton():
+   global draw_color
+   draw_color = "blue"
+   print(draw_color)
+
+
+def navyButton():
+   global draw_color
+   draw_color = "navy"
+   print(draw_color)
+
+
+def purpleButton():
+   global draw_color
+   draw_color = "purple"
+   print(draw_color)
+
+
+style_frame = tk.Frame(window)
+style_frame.grid(row=0, column=0, sticky="w")
+line_button = tk.Button(style_frame, text="─", width=3, command=lineButton)
+line_button.grid(row=0, column=0)
+rectangle_button = tk.Button(
+    style_frame, text="□", width=3, command=rectangleButton)
+rectangle_button.grid(row=0, column=1)
+circle_button = tk.Button(style_frame, text="○", width=3, command=circleButton)
+circle_button.grid(row=0, column=2)
+text_button = tk.Button(style_frame, text="text", width=3, command=textButton)
+text_button.grid(row=0, column=3)
+input_text = tk.StringVar()
+input_entry = tk.Entry(style_frame, textvariable=input_text, width=25)
+input_entry.grid(row=0, column=4)
+color_frame = tk.Frame(window)
+color_frame.grid(row=0, column=1, sticky="e")
+black_button = tk.Button(color_frame, bg="black", width=3, command=blackButton)
+black_button.grid(row=0, column=0)
+white_button = tk.Button(color_frame, bg="white", width=3, command=whiteButton)
+white_button.grid(row=0, column=1)
+red_button = tk.Button(color_frame, bg="red", width=3, command=redButton)
+red_button.grid(row=0, column=2)
+orange_button = tk.Button(color_frame, bg="orange",
+                          width=3, command=orangeButton)
+orange_button.grid(row=0, column=3)
+yellow_button = tk.Button(color_frame, bg="yellow",
+                          width=3, command=yellowButton)
+yellow_button.grid(row=0, column=4)
+green_button = tk.Button(color_frame, bg="green", width=3, command=greenButton)
+green_button.grid(row=0, column=5)
+blue_button = tk.Button(color_frame, bg="blue", width=3, command=blueButton)
+blue_button.grid(row=0, column=6)
+navy_button = tk.Button(color_frame, bg="navy", width=3, command=navyButton)
+navy_button.grid(row=0, column=7)
+purple_button = tk.Button(color_frame, bg="purple",
+                          width=3, command=purpleButton)
+purple_button.grid(row=0, column=8)
+canvas_frame = tk.Frame(window, bd=2, bg="black")
+canvas_frame.grid(row=2, column=0, columnspan=2, sticky="w")
+
+canvas = tk.Canvas(canvas_frame, width=630, height=365, bg="white")
+canvas.pack()
+
+
+def mouseLDown(event):
+   global x1, y1
+   print("x :", event.x, ", y :", event.y)
+
+   if draw_mode == 4:
+       canvas.create_text(event.x, event.y, fill=draw_color,
+                          text=input_text.get())
+
+   elif draw_mode >= 1 and draw_mode <= 3:
+       x1 = event.x
+       y1 = event.y
+
+
+def mouseLUp(event):
+   print("x1 :", x1, ", y1 :", y1, ", x2 :", event.x, ", y2 :", event.y)
+
+   if draw_mode == 1:
+       canvas.create_line(x1, y1, event.x, event.y, fill=draw_color, width=2)
+
+   elif draw_mode == 2:
+       canvas.create_rectangle(x1, y1, event.x, event.y,
+                               outline=draw_color, width=2)
+
+   elif draw_mode == 3:
+       canvas.create_oval(x1, y1, event.x, event.y,
+                          outline=draw_color, width=2)
+
+
+canvas.bind("<Button-1>", mouseLDown)
+canvas.bind("<ButtonRelease-1>", mouseLUp)
+
+window.mainloop()
